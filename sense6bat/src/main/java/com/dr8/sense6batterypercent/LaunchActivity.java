@@ -11,6 +11,8 @@ import android.view.View;
 @SuppressLint("WorldReadableFiles")
 public class LaunchActivity extends Activity {
 
+    private Thread thread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,6 +21,19 @@ public class LaunchActivity extends Activity {
             getFragmentManager().beginTransaction().replace(android.R.id.content,
                     new PrefsFragment()).commit();
 
+        thread = new Thread(){
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                    PackageManager p = getPackageManager();
+                    p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                    LaunchActivity.this.finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 
     public static class PrefsFragment extends PreferenceFragment {
@@ -36,9 +51,7 @@ public class LaunchActivity extends Activity {
     public void startUnpack(View v) {
         Log.w("S6BAT:", "Launching unpack");
         Unpack.doUnzip(this);
-        PackageManager p = getPackageManager();
-        p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-        this.finish();
+        thread.start();
     }
 
 

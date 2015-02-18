@@ -1,24 +1,18 @@
 package com.dr8.sense6batterypercent;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 /**
  * Created by drait on 2/17/15.
@@ -31,7 +25,7 @@ public class Unpack {
     @SuppressLint("DefaultLocale")
     public static void doUnzip(Context ctx) {
 
-        final String intpath = ctx.getFilesDir().getParent() + "/files/";
+        final String intpath = ctx.getFilesDir().getParent() + "/images/";
         final String extpath = Environment.getExternalStorageDirectory().toString() + "/tmp/";
 
         prefs = ctx.getSharedPreferences("com.dr8.sense6batterypercent_preferences", Context.MODE_WORLD_READABLE);
@@ -41,7 +35,7 @@ public class Unpack {
         if (sd.canWrite()) {
             File f = new File(extpath);
             if (prefs.getBoolean("firstrun", true)) {
-                Log.d("S6BAT:", "firstrun true or missing");
+//                Log.d("S6BAT:", "firstrun true or missing");
                 if (f.isDirectory()) {
                     try {
                         InputStream in = ctx.getResources().openRawResource(R.raw.images);
@@ -85,12 +79,11 @@ public class Unpack {
                 final File df = new File(intpath);
                 df.mkdir();
                 Log.d("S6BAT:", "Made it to the unpackZIP method");
-                final String finalIntpath = intpath;
                 AsyncTask<Void, Void, Void> importTask = new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... params) {
                         try {
-                            Thread.sleep(2000);
+                            Thread.sleep(3000);
                         } catch (InterruptedException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
@@ -118,6 +111,7 @@ public class Unpack {
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void ChmodRecursive(File fileOrDirectory) {
         if (fileOrDirectory.isDirectory()) {
             for (File child : fileOrDirectory.listFiles()) {

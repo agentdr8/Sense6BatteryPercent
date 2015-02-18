@@ -19,6 +19,7 @@ public class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(LoadPackageParam lpparam) throws Throwable {
         if (lpparam.packageName.equals(targetpkg)) {
+//            Log.d("S6BAT:", "matched com.android.systemui");
             pref.reload();
             BatteryIcons.initHandleLoadPackage(lpparam);
         }

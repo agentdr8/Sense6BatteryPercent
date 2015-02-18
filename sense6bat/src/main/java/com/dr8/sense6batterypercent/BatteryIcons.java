@@ -1,5 +1,6 @@
 package com.dr8.sense6batterypercent;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,14 +10,10 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import de.robv.android.xposed.callbacks.XCallback;
 
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
@@ -25,9 +22,11 @@ import static de.robv.android.xposed.XposedHelpers.getObjectField;
 
 public class BatteryIcons {
 
-    public static void initHandleLoadPackage(final XC_LoadPackage.LoadPackageParam lpParam) {
+    public static void initHandleLoadPackage(final LoadPackageParam lpParam) {
 
-        final String path = "/data/data/com.dr8.sense6batterypercent/files/";
+//        Log.d("S6BAT:", "made it inside Batteryicons");
+        @SuppressLint("SdCardPath")
+        final String path = "/data/data/com.dr8.sense6batterypercent/images/";
         final String[] battarray = {
                 "stat_sys_battery_0.png",
                 "stat_sys_battery_1.png",
@@ -132,39 +131,54 @@ public class BatteryIcons {
                 "stat_sys_battery_100.png"
         };
 
-        final ArrayList<String> filearray = new ArrayList<String>();
+//        final ArrayList<String> filearray = new ArrayList<String>();
+//
+//        String cpath = path + "battery/charge/";
+//        File cf = new File(cpath);
+//        final File charge[] = cf.listFiles();
+//        for (int i=0; i < charge.length; i++) {
+//            if (charge[i].getName().toLowerCase().endsWith(".png")) {
+//                filearray.add(charge[i].getName());
+//            }
+//        }
+//        Collections.sort(filearray, new Comparator<String>() {
+//            @Override
+//            public int compare(String o1, String o2) {
+//                try {
+//                    String minusext1 = o1.substring(0, (o1.length() - 4));
+//                    String minusext2 = o2.substring(0, (o2.length() - 4));
+//                    String justnum1 = minusext1.replaceAll("stat_sys_battery_charge_anim", "");
+//                    String justnum2 = minusext2.replaceAll("stat_sys_battery_charge_anim", "");
+//                    Integer integer1 = Integer.valueOf(justnum1);
+//                    Integer integer2 = Integer.valueOf(justnum2);
+//                    return integer1.compareTo(integer2);
+//                } catch (java.lang.NumberFormatException e) {
+//                    return o1.compareTo(o2);
+//                }
+//            }
+//        });
 
-        String cpath = path + "battery/charge/";
-        File cf = new File(cpath);
-        final File charge[] = cf.listFiles();
-        for (int i=0; i < charge.length; i++) {
-            if (charge[i].getName().toLowerCase().endsWith(".png")) {
-                filearray.add(charge[i].getName());
-            }
-        }
-        Collections.sort(filearray, new Comparator<String>() {
+        final String[] chargearray = {
+                "stat_sys_battery_charge_anim0.png",
+                "stat_sys_battery_charge_anim1.png",
+                "stat_sys_battery_charge_anim2.png",
+                "stat_sys_battery_charge_anim3.png",
+                "stat_sys_battery_charge_anim4.png",
+                "stat_sys_battery_charge_anim5.png",
+                "stat_sys_battery_charge_anim6.png",
+                "stat_sys_battery_charge_anim7.png",
+                "stat_sys_battery_charge_anim8.png",
+                "stat_sys_battery_charge_anim9.png",
+                "stat_sys_battery_charge_anim10.png"
+        };
 
-            @Override
-            public int compare(String o1, String o2) {
-                try {
-                    String minusext1 = o1.substring(0, (o1.length() - 4));
-                    String minusext2 = o2.substring(0, (o2.length() - 4));
-                    String justnum1 = minusext1.replaceAll("stat_sys_battery_charge_anim", "");
-                    String justnum2 = minusext2.replaceAll("stat_sys_battery_charge_anim", "");
-                    Integer integer1 = Integer.valueOf(justnum1);
-                    Integer integer2 = Integer.valueOf(justnum2);
-                    return integer1.compareTo(integer2);
-                } catch (java.lang.NumberFormatException e) {
-                    return o1.compareTo(o2);
-                }
-            }
-        });
+//        Log.d("S6BAT:", "finished array stuff, looking for onReceive");
 
         findAndHookMethod("com.android.systemui.statusbar.policy.BatteryController", lpParam.classLoader, "onReceive", Context.class, Intent.class, new XC_MethodHook(XCallback.PRIORITY_HIGHEST) {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 try {
-                    Log.d("S6BAT:", "hooked batcontroller");
+//                    Log.d("S6BAT:", "hooked batcontroller");
                     int status;
                     int blevel;
                     Intent paramIntent = (Intent) param.args[1];
@@ -173,36 +187,43 @@ public class BatteryIcons {
                     status = paramIntent.getIntExtra("status", 1);
                     blevel = getIntField(param.thisObject, "mLevel");
                     j = ((ArrayList<ImageView>) getObjectField(param.thisObject, "mIconViewList")).size();
+//                    Log.d("S6BAT:", "j is " + j + ", status is " + status + ", blevel is " + blevel);
                     for (int k = 0; k < j; k++) {
                         iv = ((ArrayList<ImageView>) getObjectField(param.thisObject, "mIconViewList")).get(k);
                         if (status == 2 && blevel < 100) {
                             AnimationDrawable animation = new AnimationDrawable();
-                            for (int i = 0; i < filearray.size(); i++) {
-                                String cbimg = "battery/charge/" + filearray.get(i);
+                            for (String aChargearray : chargearray) {
+                                String cbimg = "battery/" + aChargearray;
+//                                Log.d("S6BAT:", "trying to get charging image " + cbimg);
                                 final Bitmap cb = ZipStuff.getBitmap(path, cbimg);
                                 Drawable cd = new BitmapDrawable(null, cb);
-                                animation.addFrame(cd, 350);
+                                animation.addFrame(cd, 250);
                             }
                             String bimg = "battery/" + battarray[blevel];
+//                            Log.d("S6BAT:", "trying to get " + bimg);
                             final Bitmap b = ZipStuff.getBitmap(path, bimg);
                             Drawable bd = new BitmapDrawable(null, b);
-                            animation.addFrame(bd, 1000);
+                            animation.addFrame(bd, 1250);
                             animation.setOneShot(false);
                             iv.setImageDrawable(animation);
                             animation.start();
                         } else if (status == 2 && blevel >= 100) {
                             String bimg = "battery/" + battarray[100];
+//                            Log.d("S6BAT:", "trying to get " + bimg);
                             final Bitmap b = ZipStuff.getBitmap(path, bimg);
                             Drawable d = new BitmapDrawable(null, b);
                             iv.setImageDrawable(d);
                         } else {
                             String bimg = "battery/" + battarray[blevel];
+//                            Log.d("S6BAT:", "trying to get " + bimg);
                             final Bitmap b = ZipStuff.getBitmap(path, bimg);
                             Drawable d = new BitmapDrawable(null, b);
                             iv.setImageDrawable(d);
                         }
                     }
-                } catch (Throwable t) { XposedBridge.log(t); }
+                } catch (Throwable t) {
+                    Log.d("S6BAT:", t.getMessage());
+                }
             }
 
         });

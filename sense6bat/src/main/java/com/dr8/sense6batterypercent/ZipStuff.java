@@ -3,6 +3,7 @@ package com.dr8.sense6batterypercent;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,7 +60,7 @@ public class ZipStuff {
 		InputStream fis = null;
 		try {
 			try {
-				fis = new FileInputStream(FilePath + imageFile);
+                fis = new FileInputStream(FilePath + imageFile);
 			} catch (FileNotFoundException e) {
 				return null;
 			} catch (IOException e) {
