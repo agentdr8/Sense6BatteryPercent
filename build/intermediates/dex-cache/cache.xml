@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/drait/androidstudio/Sense6BatteryPercent1/sense6bat/build/intermediates/exploded-aar/Sense6BatteryPercent1/xposedLibrary/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2f0d8899eafbaf5dccea41e8a5e59294d5fb61d9">
+        <dex dex="/home/drait/androidstudio/Sense6BatteryPercent1/sense6bat/build/intermediates/pre-dexed/release/classes-e5a21cd307e30c75c159731ac1d255397864d858.jar" />
+    </item>
+    <item
+        jar="/usr/local/android-sdk/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
+        <dex dex="/home/drait/androidstudio/Sense6BatteryPercent1/sense6bat/build/intermediates/pre-dexed/release/support-v4-19.1.0-4f0b8deee2f6c13e0405fc5d77164c6a652ba03b.jar" />
+    </item>
+
+</items>
