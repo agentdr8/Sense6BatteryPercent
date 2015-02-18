@@ -192,8 +192,8 @@ public class BatteryIcons {
                         iv = ((ArrayList<ImageView>) getObjectField(param.thisObject, "mIconViewList")).get(k);
                         if (status == 2 && blevel < 100) {
                             AnimationDrawable animation = new AnimationDrawable();
-                            for (String aChargearray : chargearray) {
-                                String cbimg = "battery/" + aChargearray;
+                            for (int i = 0; i < chargearray.length; i++) {
+                                String cbimg = "battery/" + chargearray[i];
 //                                Log.d("S6BAT:", "trying to get charging image " + cbimg);
                                 final Bitmap cb = ZipStuff.getBitmap(path, cbimg);
                                 Drawable cd = new BitmapDrawable(null, cb);
